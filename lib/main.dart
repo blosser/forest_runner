@@ -12,24 +12,21 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Map Example',
-      home: MapScreen(),
-    );
+    return const MaterialApp(title: 'Flutter Map Example', home: MapScreen());
   }
 }
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({
-    super.key,
-  });
+  const MapScreen({super.key});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
+  int _counter = 0;
   late final MapController _mapController;
+  late List<Marker> markerList = [];
 
   List<LatLng> get _mapPoints => const [
     LatLng(55.755793, 37.617134),
@@ -46,6 +43,18 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+      markerList = _getMarkers(_mapPoints, _counter);
+    });
+  }
+
   @override
   void dispose() {
     _mapController.dispose();
@@ -56,7 +65,30 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map Screen'),
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {
+                  // Действие при нажатии первой кнопки
+                },
+                child: Text('Кнопка 1'),
+              ),
+              SizedBox(width: 20), // Расстояние между кнопками
+              ElevatedButton(
+                style: ButtonStyle(
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: _incrementCounter,
+                child: Text('$_counter'),
+              ), //const Text('Map Screen'),
+            ],
+          ),
+        ),
       ),
       body: FlutterMap(
         mapController: _mapController,
@@ -66,18 +98,16 @@ class _MapScreenState extends State<MapScreen> {
         ),
         children: [
           TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.flutter_map_example'
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.flutter_map_example',
           ),
           MarkerClusterLayerWidget(
             options: MarkerClusterLayerOptions(
               size: const Size(50, 50),
               maxClusterRadius: 50,
-              markers: _getMarkers(_mapPoints),
+              markers: markerList,
               builder: (_, markers) {
-                return _ClusterMarker(
-                  markersLength: markers.length.toString(),
-                );
+                return _ClusterMarker(markersLength: markers.length.toString());
               },
             ),
           ),
@@ -88,10 +118,10 @@ class _MapScreenState extends State<MapScreen> {
 }
 
 /// Метод генерации маркеров
-List<Marker> _getMarkers(List<LatLng> mapPoints) {
+List<Marker> _getMarkers(List<LatLng> mapPoints, int _counter) {
   return List.generate(
-    mapPoints.length,
-        (index) => Marker(
+    _counter,
+    (index) => Marker(
       point: mapPoints[index],
       child: Image.asset('assets/icons/map_point.png'),
       width: 50,
@@ -114,10 +144,7 @@ class _ClusterMarker extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.blue[200],
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.blue,
-          width: 3,
-        ),
+        border: Border.all(color: Colors.blue, width: 3),
       ),
       child: Center(
         child: Text(
