@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Flutter Map Example', home: MapScreen());
+    return const MaterialApp(title: 'Forest Runner', home: MapScreen());
   }
 }
 
@@ -24,35 +25,15 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  int _counter = 0;
+  // int _counter = 0;
   late final MapController _mapController;
   late List<Marker> markerList = [];
-
-  List<LatLng> get _mapPoints => const [
-    LatLng(55.755793, 37.617134),
-    LatLng(55.095960, 38.765519),
-    LatLng(56.129038, 40.406502),
-    LatLng(54.513645, 36.261268),
-    LatLng(54.193122, 37.617177),
-    LatLng(54.629540, 39.741809),
-  ];
+  late Position _currentPosition;
 
   @override
   void initState() {
     _mapController = MapController();
     super.initState();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-      markerList = _getMarkers(_mapPoints, _counter);
-    });
   }
 
   @override
@@ -61,31 +42,59 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  // List<LatLng> get _mapPoints => const [
+  //   LatLng(55.755793, 37.617134),
+  //   LatLng(55.095960, 38.765519),
+  //   LatLng(56.129038, 40.406502),
+  //   LatLng(54.513645, 36.261268),
+  //   LatLng(54.193122, 37.617177),
+  //   LatLng(54.629540, 39.741809),
+  // ];
+
+  void _incrementCounter() {
+    // setState(() {
+    //   _counter++;
+    //   markerList = _getMarkers(_mapPoints);
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ElevatedButton(
                 style: ButtonStyle(
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () {
-                  // Действие при нажатии первой кнопки
+                  _getCurrentLocation();
                 },
-                child: Text('Кнопка 1'),
+                child: Text('Где я?'),
               ),
-              SizedBox(width: 20), // Расстояние между кнопками
+              SizedBox(width: 20),
               ElevatedButton(
                 style: ButtonStyle(
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                 ),
-                onPressed: _incrementCounter,
-                child: Text('$_counter'),
-              ), //const Text('Map Screen'),
+                onPressed: () {
+                  setState(() {
+                    markerList = [];
+                  });
+                },
+                child: Text('Очистить'),
+              ),
+              // SizedBox(width: 20),
+              // ElevatedButton(
+              //   style: ButtonStyle(
+              //     foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+              //   ),
+              //   onPressed: _incrementCounter,
+              //   child: Text('$_counter'),
+              // ),
             ],
           ),
         ),
@@ -94,12 +103,12 @@ class _MapScreenState extends State<MapScreen> {
         mapController: _mapController,
         options: const MapOptions(
           initialCenter: LatLng(55.755793, 37.617134),
-          initialZoom: 5,
+          initialZoom: 10,
         ),
         children: [
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.flutter_map_example',
+            userAgentPackageName: 'forest_runner',
           ),
           MarkerClusterLayerWidget(
             options: MarkerClusterLayerOptions(
@@ -115,12 +124,31 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+
+  _getCurrentLocation() {
+    Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+          forceAndroidLocationManager: true,
+        )
+        .then((Position position) {
+          setState(() {
+            _currentPosition = position;
+            List<LatLng> _mapPoints = [
+              LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            ];
+            markerList = _getMarkers(_mapPoints);
+          });
+        })
+        .catchError((e) {
+          print(e);
+        });
+  }
 }
 
 /// Метод генерации маркеров
-List<Marker> _getMarkers(List<LatLng> mapPoints, int _counter) {
+List<Marker> _getMarkers(List<LatLng> mapPoints) {
   return List.generate(
-    _counter,
+    mapPoints.length,
     (index) => Marker(
       point: mapPoints[index],
       child: Image.asset('assets/icons/map_point.png'),
