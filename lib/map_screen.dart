@@ -115,27 +115,27 @@ class _MapScreenState extends State<MapScreen> {
 
   _getCurrentLocation() {
     Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best,
-      forceAndroidLocationManager: true,
-    )
+          desiredAccuracy: LocationAccuracy.best,
+          forceAndroidLocationManager: true,
+        )
         .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-        _counter++;
-        List<LatLng> mPoints = [];
-        for (int i = 0; i < _counter; i++) {
-          mPoints.add(_mapPoints[i]);
-        }
-        // List<LatLng> _mapPoints = [
-        //   LatLng(_currentPosition.latitude, _currentPosition.longitude),
-        // ];
-        markerList = _getMarkers(mPoints);
-        //markerList.addAll(mList);
-      });
-    })
+          setState(() {
+            _currentPosition = position;
+            _counter++;
+            List<LatLng> mPoints = [];
+            for (int i = 0; i < _counter; i++) {
+              mPoints.add(_mapPoints[i]);
+            }
+            // List<LatLng> _mapPoints = [
+            //   LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            // ];
+            markerList = _getMarkers(mPoints);
+            //markerList.addAll(mList);
+          });
+        })
         .catchError((e) {
-      print(e);
-    });
+          print(e);
+        });
   }
 }
 
@@ -143,7 +143,7 @@ class _MapScreenState extends State<MapScreen> {
 List<Marker> _getMarkers(List<LatLng> mapPoints) {
   return List.generate(
     mapPoints.length,
-        (index) => Marker(
+    (index) => Marker(
       point: mapPoints[index],
       child: Image.asset('assets/icons/map_point.png'),
       width: 50,
