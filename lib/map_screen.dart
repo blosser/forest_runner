@@ -15,6 +15,7 @@ class _MapScreenState extends State<MapScreen> {
   int _counter = 0;
   late final MapController _mapController;
   late List<Marker> markerList = [];
+  late List<LatLng> pointList = [];
   late Position _currentPosition;
 
   @override
@@ -29,7 +30,7 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
-  List<LatLng> get _mapPoints => const [
+  List<LatLng> get _mapPoints2 => const [
     LatLng(55.755793, 37.617134),
     LatLng(55.095960, 38.765519),
     LatLng(56.129038, 40.406502),
@@ -70,6 +71,7 @@ class _MapScreenState extends State<MapScreen> {
                 onPressed: () {
                   setState(() {
                     markerList = [];
+                    pointList = [];
                     _counter = 0;
                   });
                 },
@@ -108,6 +110,17 @@ class _MapScreenState extends State<MapScreen> {
               },
             ),
           ),
+          pointList.length < 2
+              ? new Container()
+              : PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: pointList,
+                      color: Colors.green,
+                      strokeWidth: 4.0,
+                    ),
+                  ],
+                ),
         ],
       ),
     );
@@ -122,14 +135,15 @@ class _MapScreenState extends State<MapScreen> {
           setState(() {
             _currentPosition = position;
             _counter++;
-            List<LatLng> mPoints = [];
-            for (int i = 0; i < _counter; i++) {
-              mPoints.add(_mapPoints[i]);
-            }
+            //List<LatLng> mPoints = [];
+            //for (int i = 0; i < _counter; i++) {
+            //mPoints.add(_mapPoints2[i]);
+            //}
             // List<LatLng> _mapPoints = [
             //   LatLng(_currentPosition.latitude, _currentPosition.longitude),
             // ];
-            markerList = _getMarkers(mPoints);
+            pointList.add(_mapPoints2[_counter - 1]);
+            markerList = _getMarkers(pointList);
             //markerList.addAll(mList);
           });
         })

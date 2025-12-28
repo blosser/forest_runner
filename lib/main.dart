@@ -69,7 +69,7 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
           NavigationDestination(
             icon: Icon(Icons.battery_4_bar_rounded),
             selectedIcon: Icon(Icons.battery_4_bar_rounded),
-            label: 'Profile',
+            label: 'Батарея',
           ),
         ],
       ),
