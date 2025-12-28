@@ -1,1 +1,1 @@
-flutter build apk --release
+flutter build apk --release --build-name=1.0.2
