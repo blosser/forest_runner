@@ -28,7 +28,7 @@ class NavigationBarExample extends StatefulWidget {
 }
 
 class _NavigationBarExampleState extends State<NavigationBarExample> {
-  int _selectedIndex = 0; // Index of the selected destination
+  int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     new MapScreen(),
     Text(
