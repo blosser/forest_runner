@@ -1,0 +1,1 @@
+copy /y C:\projects\forest_runner\build\app\outputs\flutter-apk\app-release.apk .
