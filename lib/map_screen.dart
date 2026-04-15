@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
+import "package:flutter/material.dart";
+import "package:yandex_maps_mapkit_lite/init.dart" as init;
+import "package:yandex_maps_mapkit_lite/mapkit.dart";
+import "package:yandex_maps_mapkit_lite/mapkit_factory.dart";
+import "package:yandex_maps_mapkit_lite/yandex_map.dart";
+import "package:geolocator/geolocator.dart";
+// import "package:latlong2/latlong.dart";
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});

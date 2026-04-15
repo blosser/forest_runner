@@ -1,9 +1,18 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+import "package:yandex_maps_mapkit_lite/init.dart" as init;
+import "package:yandex_maps_mapkit_lite/mapkit.dart";
 
-import 'battery.dart';
-import 'map_screen.dart';
+import "battery.dart";
+import "map_screen.dart";
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await init.initMapkit(
+      apiKey: '0a07fa93-3d89-42f9-9862-f08c06dccd52'
+  );
+  mapkit.onStart();
+
   runApp(const App());
 }
 

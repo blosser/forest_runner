@@ -24,10 +24,10 @@
 @import package_info_plus;
 #endif
 
-#if __has_include(<path_provider_foundation/PathProviderPlugin.h>)
-#import <path_provider_foundation/PathProviderPlugin.h>
+#if __has_include(<yandex_maps_mapkit_lite/YandexMapsPlugin.h>)
+#import <yandex_maps_mapkit_lite/YandexMapsPlugin.h>
 #else
-@import path_provider_foundation;
+@import yandex_maps_mapkit_lite;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -36,7 +36,7 @@
   [FPPBatteryPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPBatteryPlusPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
   [FPPPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPPackageInfoPlusPlugin"]];
-  [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
+  [YandexMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"YandexMapsPlugin"]];
 }
 
 @end
