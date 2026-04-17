@@ -1,10 +1,8 @@
 import "package:flutter/material.dart";
-import "package:yandex_maps_mapkit_lite/init.dart" as init;
-import "package:yandex_maps_mapkit_lite/mapkit.dart";
-import "package:yandex_maps_mapkit_lite/mapkit_factory.dart";
-import "package:yandex_maps_mapkit_lite/yandex_map.dart";
-import "package:geolocator/geolocator.dart";
 // import "package:latlong2/latlong.dart";
+import "package:yandex_maps_mapkit_lite/image.dart" as image_provider;
+import "package:yandex_maps_mapkit_lite/mapkit.dart";
+import "package:yandex_maps_mapkit_lite/yandex_map.dart";
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -15,31 +13,33 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   int _counter = 0;
-  late final MapController _mapController;
-  late List<Marker> markerList = [];
-  late List<LatLng> pointList = [];
-  late Position _currentPosition;
+  MapWindow? _mapWindow;
+
+  // late final MapController _mapController;
+  // late List<Marker> markerList = [];
+  // late List<LatLng> pointList = [];
+  // late Position _currentPosition;
 
   @override
   void initState() {
-    _mapController = MapController();
+    // _mapController = MapController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _mapController.dispose();
+    // _mapController.dispose();
     super.dispose();
   }
 
-  List<LatLng> get _mapPoints2 => const [
-    LatLng(55.755793, 37.617134),
-    LatLng(55.095960, 38.765519),
-    LatLng(56.129038, 40.406502),
-    LatLng(54.513645, 36.261268),
-    LatLng(54.193122, 37.617177),
-    LatLng(54.629540, 39.741809),
-  ];
+  // List<LatLng> get _mapPoints2 => const [
+  //   LatLng(55.755793, 37.617134),
+  //   LatLng(55.095960, 38.765519),
+  //   LatLng(56.129038, 40.406502),
+  //   LatLng(54.513645, 36.261268),
+  //   LatLng(54.193122, 37.617177),
+  //   LatLng(54.629540, 39.741809),
+  // ];
 
   void _incrementCounter() {
     // setState(() {
@@ -72,8 +72,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 onPressed: () {
                   setState(() {
-                    markerList = [];
-                    pointList = [];
+                    // markerList = [];
+                    // pointList = [];
                     _counter = 0;
                   });
                 },
@@ -91,109 +91,148 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
       ),
-      body: FlutterMap(
-        mapController: _mapController,
-        options: const MapOptions(
-          initialCenter: LatLng(55.755793, 37.617134),
-          initialZoom: 10,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'forest_runner',
-          ),
-          MarkerClusterLayerWidget(
-            options: MarkerClusterLayerOptions(
-              size: const Size(50, 50),
-              maxClusterRadius: 50,
-              markers: markerList,
-              builder: (_, markers) {
-                return _ClusterMarker(markersLength: markers.length.toString());
-              },
-            ),
-          ),
-          pointList.length < 2
-              ? new Container()
-              : PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: pointList,
-                      color: Colors.green,
-                      strokeWidth: 4.0,
-                    ),
-                  ],
-                ),
-        ],
-      ),
+      body: YandexMap(onMapCreated: (mapWindow) => _mapWindow = mapWindow),
     );
   }
 
+  //Чтобы изменить положение или масштаб карты, используйте метод
+  // _mapWindow?.map.move(
+  // CameraPosition(
+  // Point(latitude: 55.751225, longitude: 37.62954),
+  // zoom: 17.0,
+  // azimuth: 150.0,
+  // tilt: 30.0
+  // )
+  // );
+
   _getCurrentLocation() {
-    Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
-          forceAndroidLocationManager: true,
-        )
-        .then((Position position) {
-          setState(() {
-            _currentPosition = position;
-            _counter++;
-            //List<LatLng> mPoints = [];
-            //for (int i = 0; i < _counter; i++) {
-            //mPoints.add(_mapPoints2[i]);
-            //}
-            // List<LatLng> _mapPoints = [
-            //   LatLng(_currentPosition.latitude, _currentPosition.longitude),
-            // ];
-            pointList.add(_mapPoints2[_counter - 1]);
-            markerList = _getMarkers(pointList);
-            //markerList.addAll(mList);
-          });
-        })
-        .catchError((e) {
-          print(e);
-        });
+    final imageProvider = image_provider.ImageProvider.fromImageProvider(
+      const AssetImage("assets/icons/map_point.png"),
+    );
+    final pinsCollection = _mapWindow?.map.mapObjects.addCollection();
+    final points = [
+      Point(latitude: 59.936046, longitude: 30.326869),
+      Point(latitude: 59.938185, longitude: 30.32808),
+      Point(latitude: 59.937376, longitude: 30.33621),
+      Point(latitude: 59.934517, longitude: 30.335059),
+    ];
+
+    final listener = MapObjectTapListenerImpl(context);
+    final polyline = Polyline(points);
+    final polylineObject = _mapWindow?.map.mapObjects.addPolylineWithGeometry(
+      polyline,
+    );
+    polylineObject
+      ?..strokeWidth = 5.0
+      ..setStrokeColor(Colors.grey)
+      ..outlineWidth = 2.0
+      ..outlineColor = Colors.black;
+
+    points.forEach((point) {
+      pinsCollection?.addPlacemark()
+        ?..geometry = point
+        ..setIcon(imageProvider)
+        ..addTapListener(listener);
+    });
+
+    _mapWindow?.map.move(
+      CameraPosition(
+        Point(latitude: 59.936046, longitude: 30.326869),
+        zoom: 15.0,
+        azimuth: 150.0,
+        tilt: 30.0,
+      ),
+    );
+
+    // final placemark = _mapWindow?.map.mapObjects.addPlacemark()
+    //   ?..geometry = const Point(latitude: 55.751225, longitude: 37.62954)
+    //   ..setIcon(imageProvider)
+    //   ..setIconStyle(
+    //       const mapkit.IconStyle(
+    //         anchor: math.Point(0.5, 1.0),
+    //         scale: 1,
+    //       ));
+
+    // Geolocator.getCurrentPosition(
+    //       desiredAccuracy: LocationAccuracy.best,
+    //       forceAndroidLocationManager: true,
+    //     )
+    //     .then((Position position) {
+    //       setState(() {
+    //         // _currentPosition = position;
+    //         _counter++;
+    //         //List<LatLng> mPoints = [];
+    //         //for (int i = 0; i < _counter; i++) {
+    //         //mPoints.add(_mapPoints2[i]);
+    //         //}
+    //         // List<LatLng> _mapPoints = [
+    //         //   LatLng(_currentPosition.latitude, _currentPosition.longitude),
+    //         // ];
+    //         // pointList.add(_mapPoints2[_counter - 1]);
+    //         // markerList = _getMarkers(pointList);
+    //         //markerList.addAll(mList);
+    //       });
+    //     })
+    //     .catchError((e) {
+    //       print(e);
+    //     });
   }
 }
 
 /// Метод генерации маркеров
-List<Marker> _getMarkers(List<LatLng> mapPoints) {
-  return List.generate(
-    mapPoints.length,
-    (index) => Marker(
-      point: mapPoints[index],
-      child: Image.asset('assets/icons/map_point.png'),
-      width: 50,
-      height: 50,
-      alignment: Alignment.center,
-    ),
-  );
-}
+// List<Marker> _getMarkers(List<LatLng> mapPoints) {
+//   return List.generate(
+//     mapPoints.length,
+//     (index) => Marker(
+//       point: mapPoints[index],
+//       child: Image.asset('assets/icons/map_point.png'),
+//       width: 50,
+//       height: 50,
+//       alignment: Alignment.center,
+//     ),
+//   );
+// }
 
 /// Виджет для отображения кластера
-class _ClusterMarker extends StatelessWidget {
-  const _ClusterMarker({required this.markersLength});
+// class _ClusterMarker extends StatelessWidget {
+//   const _ClusterMarker({required this.markersLength});
+//
+//   /// Количество маркеров, объединенных в кластер
+//   final String markersLength;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: Colors.blue[200],
+//         shape: BoxShape.circle,
+//         border: Border.all(color: Colors.blue, width: 3),
+//       ),
+//       child: Center(
+//         child: Text(
+//           markersLength,
+//           style: TextStyle(
+//             color: Colors.blue[900],
+//             fontWeight: FontWeight.w700,
+//             fontSize: 18,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  /// Количество маркеров, объединенных в кластер
-  final String markersLength;
+final class MapObjectTapListenerImpl implements MapObjectTapListener {
+  BuildContext context;
+
+  MapObjectTapListenerImpl(this.context);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue[200],
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.blue, width: 3),
-      ),
-      child: Center(
-        child: Text(
-          markersLength,
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-      ),
-    );
+  bool onMapObjectTap(MapObject mapObject, Point point) {
+    final str =
+        "Tapped the placemark: Point(latitude: ${point.latitude}, longitude: ${point.longitude})";
+    final snackBar = SnackBar(content: Text(str));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    return true;
   }
 }
