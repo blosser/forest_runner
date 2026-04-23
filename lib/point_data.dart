@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class PointData extends StatefulWidget {
@@ -32,11 +34,67 @@ class _PointData extends State<PointData> {
   int _currentSortColumn = 0;
   bool _isSortAsc = true;
 
+  Timer? _timer;
+  int _seconds = 0;
+  String title = '00:00:00';
+
+  String getXX(int val) {
+    return (val < 10 ? '0' : '') + val.toString();
+  }
+
+  void getTime() {
+    DateTime n = DateTime.now();
+    int hh = _seconds ~/ 3600;
+    int mm = _seconds ~/ 60;
+    int ss = _seconds - 3600 * hh - 60 * mm;
+    title = getXX(hh) + ':' + getXX(mm) + ':' + getXX(ss);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('DataTable Demo')),
+        appBar: AppBar(
+          title: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.all<Color>(
+                      Colors.blue,
+                    ),
+                  ),
+                  onPressed: () {
+                    _timer = Timer.periodic(const Duration(seconds: 1), (
+                      timer,
+                    ) {
+                      setState(() {
+                        _seconds++;
+                        getTime();
+                      });
+                    });
+                  },
+                  child: Text('Старт'),
+                ),
+                SizedBox(width: 2),
+                Text("$title", style: TextStyle(fontSize: 22)),
+                SizedBox(width: 2),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.all<Color>(
+                      Colors.blue,
+                    ),
+                  ),
+                  onPressed: () {
+                    _timer?.cancel();
+                  },
+                  child: Text('Стоп'),
+                ),
+              ],
+            ),
+          ),
+        ),
         body: ListView(children: [_createDataTable()]),
       ),
     );

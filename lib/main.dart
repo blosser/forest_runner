@@ -40,10 +40,6 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
   final List<Widget> _widgetOptions = <Widget>[
     new MapScreen(),
     new PointData(),
-    // Text(
-    //   'Search Page',
-    //   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    // ),
     new BatteryPage(),
   ];
 
