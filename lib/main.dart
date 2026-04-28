@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:forest_runner/point_data.dart";
 import "package:yandex_maps_mapkit_lite/init.dart" as init;
@@ -49,9 +51,61 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
     });
   }
 
+  Timer? _timer;
+  int _seconds = 0;
+  String title = '00:00:00';
+
+  String getXX(int val) {
+    return (val < 10 ? '0' : '') + val.toString();
+  }
+
+  void getTime() {
+    DateTime n = DateTime.now();
+    int hh = _seconds ~/ 3600;
+    int mm = _seconds ~/ 60;
+    int ss = _seconds - 3600 * hh - 60 * mm;
+    title = getXX(hh) + ':' + getXX(mm) + ':' + getXX(ss);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {
+                  _timer?.cancel();
+                  _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                    setState(() {
+                      _seconds++;
+                      getTime();
+                    });
+                  });
+                },
+                child: Text('Старт'),
+              ),
+              SizedBox(width: 2),
+              Text("$title", style: TextStyle(fontSize: 22)),
+              SizedBox(width: 2),
+              ElevatedButton(
+                style: ButtonStyle(
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {
+                  _timer?.cancel();
+                },
+                child: Text('Стоп'),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Center(
         child: _widgetOptions.elementAt(
           _selectedIndex,
