@@ -38,10 +38,43 @@ class NavigationBarExample extends StatefulWidget {
 }
 
 class _NavigationBarExampleState extends State<NavigationBarExample> {
+
+  void updateChild() {
+    setState(() {
+      // Обновляем содержимое дочернего виджета
+      childContent = "Обн!";
+    });
+  }
+
+  String childContent = "Пер";
+  List<Map> pointData2 = [];
+  List<Map> pointData = [
+    {'id': 100, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 101, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 102, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 110, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 111, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 112, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 120, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 121, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 122, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 130, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 131, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 132, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 140, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 141, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 142, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 150, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 151, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 152, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+    {'id': 160, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 161, 'title': 'Flutter Basics', 'author': 'David John'},
+    {'id': 162, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
+  ];
   int _selectedIndex = 1;
-  final List<Widget> _widgetOptions = <Widget>[
+  late List<Widget> _widgetOptions = <Widget>[
     new MapScreen(),
-    new PointData(),
+    new PointData(childContent, pointData2),
     new BatteryPage(),
   ];
 
@@ -67,6 +100,15 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
     title = getXX(hh) + ':' + getXX(mm) + ':' + getXX(ss);
   }
 
+  // void addPointData() {
+  //   setState(() {
+  //     childContent = "Обн!";
+  //     pointData2 = pointData;
+  //   });
+  //   //wPointData = new PointData(pointData);
+  //   //wPointData.setPointData(pointData);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,18 +117,21 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              ChildWidget(content: childContent),
               ElevatedButton(
                 style: ButtonStyle(
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () {
-                  _timer?.cancel();
-                  _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                    setState(() {
-                      _seconds++;
-                      getTime();
-                    });
-                  });
+                  updateChild();
+                  // _timer?.cancel();
+                  // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                  //   setState(() {
+                  //     _seconds++;
+                  //     getTime();
+                  //     addPointData();
+                  //   });
+                  // });
                 },
                 child: Text('Старт'),
               ),
@@ -106,7 +151,8 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
           ),
         ),
       ),
-      body: Center(
+      body:
+      Center(
         child: _widgetOptions.elementAt(
           _selectedIndex,
         ), // Display the selected page
@@ -131,6 +177,23 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
             label: 'Батарея',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChildWidget extends StatelessWidget {
+  final String content;
+
+  const ChildWidget({Key? key, required this.content}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //color: Colors.blueAccent.withOpacity(0.2),
+      child: Text(
+        content,
+        //style: TextStyle(fontSize: 12),
       ),
     );
   }
