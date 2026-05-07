@@ -6,6 +6,7 @@ import "package:yandex_maps_mapkit_lite/init.dart" as init;
 import "package:yandex_maps_mapkit_lite/mapkit_factory.dart";
 
 import "battery.dart";
+import "mainnb.dart";
 import "map_screen.dart";
 
 void main() async {
@@ -24,20 +25,20 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Forest Runner',
-      home: const NavigationBarExample(),
+      home: const MainWidget(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class NavigationBarExample extends StatefulWidget {
-  const NavigationBarExample({super.key});
+class MainWidget extends StatefulWidget {
+  const MainWidget({super.key});
 
   @override
-  State<NavigationBarExample> createState() => _NavigationBarExampleState();
+  State<MainWidget> createState() => _MainWidgetState();
 }
 
-class _NavigationBarExampleState extends State<NavigationBarExample> {
+class _MainWidgetState extends State<MainWidget> {
 
   void updateChild() {
     setState(() {
@@ -71,18 +72,6 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
     {'id': 161, 'title': 'Flutter Basics', 'author': 'David John'},
     {'id': 162, 'title': 'Git and GitHub', 'author': 'Merlin Nick'},
   ];
-  int _selectedIndex = 1;
-  late List<Widget> _widgetOptions = <Widget>[
-    new MapScreen(),
-    new PointData(childContent, pointData2),
-    new BatteryPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   Timer? _timer;
   int _seconds = 0;
@@ -112,88 +101,84 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ChildWidget(content: childContent),
-              ElevatedButton(
-                style: ButtonStyle(
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: () {
-                  updateChild();
-                  // _timer?.cancel();
-                  // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                  //   setState(() {
-                  //     _seconds++;
-                  //     getTime();
-                  //     addPointData();
-                  //   });
-                  // });
-                },
-                child: Text('Старт'),
-              ),
-              SizedBox(width: 2),
-              Text("$title", style: TextStyle(fontSize: 22)),
-              SizedBox(width: 2),
-              ElevatedButton(
-                style: ButtonStyle(
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: () {
-                  _timer?.cancel();
-                },
-                child: Text('Стоп'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: Center(
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       children: [
+      //         ChildWidget(content: childContent),
+      //         ElevatedButton(
+      //           style: ButtonStyle(
+      //             foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+      //           ),
+      //           onPressed: () {
+      //             updateChild();
+      //             // _timer?.cancel();
+      //             // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      //             //   setState(() {
+      //             //     _seconds++;
+      //             //     getTime();
+      //             //     addPointData();
+      //             //   });
+      //             // });
+      //           },
+      //           child: Text('Старт'),
+      //         ),
+      //         SizedBox(width: 2),
+      //         Text("$title", style: TextStyle(fontSize: 22)),
+      //         SizedBox(width: 2),
+      //         ElevatedButton(
+      //           style: ButtonStyle(
+      //             foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+      //           ),
+      //           onPressed: () {
+      //             _timer?.cancel();
+      //           },
+      //           child: Text('Стоп'),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body:
       Center(
-        child: _widgetOptions.elementAt(
-          _selectedIndex,
-        ), // Display the selected page
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.map_outlined),
-            selectedIcon: Icon(Icons.map),
-            label: 'Карта',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search),
-            label: 'Данные',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.battery_4_bar_rounded),
-            selectedIcon: Icon(Icons.battery_4_bar_rounded),
-            label: 'Батарея',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ChildWidget extends StatelessWidget {
-  final String content;
-
-  const ChildWidget({Key? key, required this.content}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.blueAccent.withOpacity(0.2),
-      child: Text(
-        content,
-        //style: TextStyle(fontSize: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ChildWidget(content: childContent),
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                updateChild();
+                // _timer?.cancel();
+                // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                //   setState(() {
+                //     _seconds++;
+                //     getTime();
+                //     addPointData();
+                //   });
+                // });
+              },
+              child: Text('Старт'),
+            ),
+            SizedBox(width: 2),
+            Text("$title", style: TextStyle(fontSize: 22)),
+            SizedBox(width: 2),
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                _timer?.cancel();
+              },
+              child: Text('Стоп'),
+            ),
+            MainNavigationBar(childContent: childContent), // Display the selected page
+          ],
+        ),
+        //child: MainNavigationBar(childContent: childContent), // Display the selected page
       ),
     );
   }
