@@ -1,13 +1,10 @@
 import "dart:async";
 
 import "package:flutter/material.dart";
-import "package:forest_runner/point_data.dart";
 import "package:yandex_maps_mapkit_lite/init.dart" as init;
 import "package:yandex_maps_mapkit_lite/mapkit_factory.dart";
 
-import "battery.dart";
 import "mainnb.dart";
-import "map_screen.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,15 +36,12 @@ class MainWidget extends StatefulWidget {
 }
 
 class _MainWidgetState extends State<MainWidget> {
-
-  void updateChild() {
+  void updateData() {
     setState(() {
-      // Обновляем содержимое дочернего виджета
-      childContent = "Обн!";
+      pointData2 = pointData.sublist(0, _seconds).reversed.toList();
     });
   }
 
-  String childContent = "Пер";
   List<Map> pointData2 = [];
   List<Map> pointData = [
     {'id': 100, 'title': 'Flutter Basics', 'author': 'David John'},
@@ -89,96 +83,67 @@ class _MainWidgetState extends State<MainWidget> {
     title = getXX(hh) + ':' + getXX(mm) + ':' + getXX(ss);
   }
 
-  // void addPointData() {
-  //   setState(() {
-  //     childContent = "Обн!";
-  //     pointData2 = pointData;
-  //   });
-  //   //wPointData = new PointData(pointData);
-  //   //wPointData.setPointData(pointData);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Center(
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.start,
-      //       children: [
-      //         ChildWidget(content: childContent),
-      //         ElevatedButton(
-      //           style: ButtonStyle(
-      //             foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-      //           ),
-      //           onPressed: () {
-      //             updateChild();
-      //             // _timer?.cancel();
-      //             // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      //             //   setState(() {
-      //             //     _seconds++;
-      //             //     getTime();
-      //             //     addPointData();
-      //             //   });
-      //             // });
-      //           },
-      //           child: Text('Старт'),
-      //         ),
-      //         SizedBox(width: 2),
-      //         Text("$title", style: TextStyle(fontSize: 22)),
-      //         SizedBox(width: 2),
-      //         ElevatedButton(
-      //           style: ButtonStyle(
-      //             foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-      //           ),
-      //           onPressed: () {
-      //             _timer?.cancel();
-      //           },
-      //           child: Text('Стоп'),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      body:
-      Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Центровка по вертикали
           children: [
-            ChildWidget(content: childContent),
-            ElevatedButton(
-              style: ButtonStyle(
-                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-                updateChild();
-                // _timer?.cancel();
-                // _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                //   setState(() {
-                //     _seconds++;
-                //     getTime();
-                //     addPointData();
-                //   });
-                // });
-              },
-              child: Text('Старт'),
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.all<Color>(
+                      Colors.blue,
+                    ),
+                  ),
+                  onPressed: () {
+                    _timer?.cancel();
+                    _timer = Timer.periodic(const Duration(seconds: 1), (
+                      timer,
+                    ) {
+                      _seconds++;
+                      getTime();
+                      //addPointData();
+                      updateData();
+                    });
+                  },
+                  child: Text('Старт'),
+                ),
+                SizedBox(width: 2),
+                Text("$title", style: TextStyle(fontSize: 22)),
+                SizedBox(width: 2),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.all<Color>(
+                      Colors.blue,
+                    ),
+                  ),
+                  onPressed: () {
+                    _timer?.cancel();
+                  },
+                  child: Text('Стоп'),
+                ),
+              ],
             ),
-            SizedBox(width: 2),
-            Text("$title", style: TextStyle(fontSize: 22)),
-            SizedBox(width: 2),
-            ElevatedButton(
-              style: ButtonStyle(
-                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: MainNavigationBar(pointData: pointData2),
+                    ),
+                  ),
+                ],
               ),
-              onPressed: () {
-                _timer?.cancel();
-              },
-              child: Text('Стоп'),
             ),
-            MainNavigationBar(childContent: childContent), // Display the selected page
           ],
         ),
-        //child: MainNavigationBar(childContent: childContent), // Display the selected page
       ),
     );
   }

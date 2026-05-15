@@ -1,5 +1,3 @@
-import "dart:async";
-
 import "package:flutter/material.dart";
 import "package:forest_runner/point_data.dart";
 
@@ -7,22 +5,21 @@ import "battery.dart";
 import "map_screen.dart";
 
 class MainNavigationBar extends StatefulWidget {
-  final String childContent;
+  // final String data;
+  final List<Map> pointData;
 
-  const MainNavigationBar({Key? key, required this.childContent}) : super(key: key);
+  MainNavigationBar({required this.pointData});
 
   @override
   State<MainNavigationBar> createState() => _MainNavigationBarState();
 }
 
 class _MainNavigationBarState extends State<MainNavigationBar> {
-  List<Map> pointData = [];
-
-
   int _selectedIndex = 1;
-  late List<Widget> _widgetOptions = <Widget>[
+
+  List<Widget> get _widgetOptions => [
     new MapScreen(),
-    new PointData(widget.childContent, pointData),
+    new PointData(/*data: widget.data, */ pointData: widget.pointData),
     new BatteryPage(),
   ];
 
@@ -35,12 +32,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-      Center(
-        child: _widgetOptions.elementAt(
-          _selectedIndex,
-        ), // Display the selected page
-      ),
+      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
@@ -61,23 +53,6 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
             label: 'Батарея',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ChildWidget extends StatelessWidget {
-  final String content;
-
-  const ChildWidget({Key? key, required this.content}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.blueAccent.withOpacity(0.2),
-      child: Text(
-        content,
-        //style: TextStyle(fontSize: 12),
       ),
     );
   }
