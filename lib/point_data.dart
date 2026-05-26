@@ -12,8 +12,7 @@ class PointData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
-      body: Expanded(child: ListView(children: [_createDataTable()])),
+      body: ListView(children: [_createDataTable()]),
     );
   }
 
