@@ -128,6 +128,8 @@ class _MainWidgetState extends State<MainWidget> {
                   },
                   child: Text('Стоп'),
                 ),
+                SizedBox(width: 2),
+                Text("1.0.1", style: TextStyle(fontSize: 22)),
               ],
             ),
             Expanded(
