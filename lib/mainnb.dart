@@ -5,10 +5,10 @@ import "battery.dart";
 import "map_screen.dart";
 
 class MainNavigationBar extends StatefulWidget {
-  // final String data;
-  final List<Map> pointData;
+  final String data;
+  //final List<Map> pointData;
 
-  MainNavigationBar({required this.pointData});
+  MainNavigationBar({Key? key, required this.data}) : super(key: key);
 
   @override
   State<MainNavigationBar> createState() => _MainNavigationBarState();
@@ -19,7 +19,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
 
   List<Widget> get _widgetOptions => [
     new MapScreen(),
-    new PointData(/*data: widget.data, */ pointData: widget.pointData),
+    new PointData(/*data: widget.data,  pointData: widget.pointDatafinal */data: widget.data),
     new BatteryPage(),
   ];
 
