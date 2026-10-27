@@ -3,7 +3,8 @@ import "dart:async";
 import "package:flutter/material.dart";
 
 class MainHeaderWidget extends StatefulWidget {
-  final ValueChanged<String> onDataChanged;
+  final ValueChanged<List<Map>> onDataChanged;
+
   const MainHeaderWidget({Key? key, required this.onDataChanged}) : super(key: key);
 
   @override
@@ -12,12 +13,12 @@ class MainHeaderWidget extends StatefulWidget {
 
 class _MainHeaderWidgetState extends State<MainHeaderWidget> {
   void updateData() {
-    setState(() {
-      pointData2 = pointData.sublist(0, _seconds).reversed.toList();
-    });
+    //setState(() {
+      List<Map> pointData2 = pointData.sublist(0, _seconds).reversed.toList();
+      widget.onDataChanged(pointData2);
+    //});
   }
 
-  List<Map> pointData2 = [];
   List<Map> pointData = [
     {'id': 100, 'title': 'Flutter Basics', 'author': 'David John'},
     {'id': 101, 'title': 'Flutter Basics', 'author': 'David John'},
@@ -51,7 +52,7 @@ class _MainHeaderWidgetState extends State<MainHeaderWidget> {
   }
 
   void getTime() {
-    DateTime n = DateTime.now();
+    // DateTime n = DateTime.now();
     int hh = _seconds ~/ 3600;
     int mm = _seconds ~/ 60;
     int ss = _seconds - 3600 * hh - 60 * mm;
@@ -66,7 +67,7 @@ class _MainHeaderWidgetState extends State<MainHeaderWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Центровка по вертикали
           children: [
-            SizedBox(height: 50),
+            //SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -77,16 +78,16 @@ class _MainHeaderWidgetState extends State<MainHeaderWidget> {
                     ),
                   ),
                   onPressed: () {
-                    widget.onDataChanged('Новые данные из FirstChild');
-                    // _timer?.cancel();
-                    // _timer = Timer.periodic(const Duration(seconds: 1), (
-                    //     timer,
-                    //     ) {
-                    //   _seconds++;
-                    //   getTime();
-                    //   //addPointData();
-                    //   updateData();
-                    //});
+                    //widget.onDataChanged('Новые данные из FirstChild');
+                    _timer?.cancel();
+                    _timer = Timer.periodic(const Duration(seconds: 1), (
+                        timer,
+                        ) {
+                      _seconds++;
+                      getTime();
+                      //addPointData();
+                      updateData();
+                    });
                   },
                   child: Text('Старт'),
                 ),
@@ -105,7 +106,7 @@ class _MainHeaderWidgetState extends State<MainHeaderWidget> {
                   child: Text('Стоп'),
                 ),
                 SizedBox(width: 2),
-                Text("1.0.1", style: TextStyle(fontSize: 22)),
+                Text("v1", style: TextStyle(fontSize: 22)),
               ],
             ),
           ],

@@ -12,12 +12,13 @@ class MainWidget extends StatefulWidget {
 }
 
 class _MainWidgetState extends State<MainWidget> {
-  String _sharedData = 'Начальное значение';
+  List<Map> _pointData = [];
+  //String _sharedData = 'Начальное значение';
 
-  // Метод, который вызывается из Child1
-  void _updateData(String newData) {
+  // Метод, который вызывается из MainHeaderWidget
+  void _updateData(List<Map> pointData) {
     setState(() {
-      _sharedData = newData;
+      _pointData = pointData;
     });
   }
 
@@ -29,8 +30,9 @@ class _MainWidgetState extends State<MainWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Центровка по вертикали
           children: [
-            SizedBox(height: 50),
-            Expanded(
+            //SizedBox(height: 50),
+            SizedBox(
+              height: 50,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -48,7 +50,7 @@ class _MainWidgetState extends State<MainWidget> {
                 children: [
                   Expanded(
                     child: Container(
-                      child: MainNavigationBar(/*pointData: pointData2*/data: _sharedData,),
+                      child: MainNavigationBar(/*pointData: pointData2*/pointData: _pointData,),
                     ),
                   ),
                 ],
