@@ -106,7 +106,17 @@ class _MainHeaderWidgetState extends State<MainHeaderWidget> {
                   child: Text('Стоп'),
                 ),
                 SizedBox(width: 2),
-                Text("v1", style: TextStyle(fontSize: 22)),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                      Colors.green,
+                    ),
+                  ),
+                  onPressed: () {
+
+                  },
+                  child: Text('V1'),
+                ),
               ],
             ),
           ],
