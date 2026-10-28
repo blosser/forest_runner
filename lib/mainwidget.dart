@@ -1,6 +1,5 @@
-import "dart:async";
-
 import "package:flutter/material.dart";
+
 import "mainheader.dart";
 import "mainnb.dart";
 
@@ -13,6 +12,7 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> {
   List<Map> _pointData = [];
+
   //String _sharedData = 'Начальное значение';
 
   // Метод, который вызывается из MainHeaderWidget
@@ -30,7 +30,7 @@ class _MainWidgetState extends State<MainWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Центровка по вертикали
           children: [
-            //SizedBox(height: 50),
+            SizedBox(height: 30),
             SizedBox(
               height: 50,
               child: Column(
@@ -50,7 +50,10 @@ class _MainWidgetState extends State<MainWidget> {
                 children: [
                   Expanded(
                     child: Container(
-                      child: MainNavigationBar(/*pointData: pointData2*/pointData: _pointData,),
+                      child: MainNavigationBar(
+                        /*pointData: pointData2*/
+                        pointData: _pointData,
+                      ),
                     ),
                   ),
                 ],

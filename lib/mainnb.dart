@@ -19,7 +19,10 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
 
   List<Widget> get _widgetOptions => [
     new MapScreen(),
-    new PointData(/*data: widget.data,  pointData: widget.pointDatafinal */pointData: widget.pointData),
+    new PointData(
+      /*data: widget.data,  pointData: widget.pointDatafinal */
+      pointData: widget.pointData,
+    ),
     new BatteryPage(),
   ];
 
